@@ -1,0 +1,23 @@
+{
+    "name": "imgtools_be",
+    "version": "1.0.0",
+    "description": "node with mongoose backend for imgtools",
+    "main": "src/app.js",
+    "scripts": {
+        "start": "node src/app.js",
+        "dev": "nodemon src/app.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "bcryptjs": "^3.0.2",
+        "cors": "^2.8.5",
+        "dotenv": "^16.5.0",
+        "express": "^4.17.1",
+        "jsonwebtoken": "^9.0.2",
+        "mongoose": "^5.10.9"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.7"
+    }
+}
