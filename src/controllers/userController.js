@@ -166,6 +166,7 @@ class UserController {
             if (!isMatch) return res.json({ status: 'error', message: 'Mật khẩu không đúng' });
             const token = jwt.sign({ id: user._id, username: user.username }, process.env.JWT_SECRET || 'secretkey', { expiresIn: '1d' });
             res.json({
+                status: 'success',
                 token,
                 user: {
                     id: user._id,
