@@ -34,7 +34,7 @@ class UserController {
             const hashedPassword = await bcrypt.hash(password, 10);
             const user = new User({ name, username, password: hashedPassword, avatar });
             await user.save();
-            res.json({ status: 'success', data: user, message: 'Đăng ký thành công' });
+            res.json({ status: 'success', message: 'Đăng ký thành công' });
         } catch (error) {
             res.json({ status: 400, message: error.message });
         }
