@@ -119,7 +119,7 @@ class UserController {
                 return res.json({ status: 'error', message: 'Không tìm thấy người dùng' });
             }
             if (user.role === 'admin') {
-                return res.json({ status: 'error', message: 'Admin không thể tự xóa chính mình bằng quyền này' });
+                return res.json({ status: 'error', message: 'Admin không thể tự xóa chính mình' });
             }
             await User.findByIdAndDelete(userId);
             res.json({ status: 'success', message: 'Xóa thành công' });
