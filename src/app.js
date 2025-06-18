@@ -10,13 +10,14 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
-app.use(express.json());
 connectDB();
+app.use(cors());
 
 app.use('/api/users', userRoutes);
 app.use('/api/pictures', pictureRoutes);
 app.use('/api/folders', folderRoutes);
+app.use(express.json());
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on port: ${PORT}`);
