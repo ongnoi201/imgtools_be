@@ -39,10 +39,18 @@ const getAllImageByUserAndFolder = async (req, res) => {
         const userObjectId = mongoose.Types.ObjectId(userId);
         const folderObjectId = mongoose.Types.ObjectId(folderId);
 
+        // Phân trang
+        const page = parseInt(req.query.page, 10) || 1;
+        const pageSize = parseInt(req.query.pageSize, 10) || 30;
+        const skip = (page - 1) * pageSize;
+
         const images = await Picture.find({
             userId: userObjectId,
             folderId: folderObjectId,
-        }).sort({ createdAt: -1 });
+        })
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(pageSize);
 
         res.json({ status: 'success', data: images });
     } catch (err) {
@@ -57,6 +65,11 @@ const getAllImageDetails = async (req, res) => {
             return res.json({ status: 'error', message: 'Bạn không có quyền truy cập!' });
         }
 
+        // Phân trang
+        const page = parseInt(req.query.page, 10) || 1;
+        const pageSize = parseInt(req.query.pageSize, 10) || 30;
+        const skip = (page - 1) * pageSize;
+
         const images = await Picture.find()
             .populate({
                 path: 'userId',
@@ -66,7 +79,9 @@ const getAllImageDetails = async (req, res) => {
                 path: 'folderId',
                 select: 'name desc createdAt',
             })
-            .sort({ createdAt: -1 });
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(pageSize);
 
         const data = images.map(img => ({
             imageId: img._id,
@@ -123,9 +138,16 @@ const getAllImageByUser = async (req, res) => {
         const userId = req.user && (req.user._id || req.user.id);
         const userObjectId = mongoose.Types.ObjectId(userId);
 
+        const page = parseInt(req.query.page, 10) || 1;
+        const pageSize = parseInt(req.query.pageSize, 10) || 30;
+        const skip = (page - 1) * pageSize;
+
         const images = await Picture.find({
             userId: userObjectId,
-        }).sort({ createdAt: -1 });
+        })
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(pageSize);
 
         res.json({ status: 'success', data: images });
     } catch (err) {
