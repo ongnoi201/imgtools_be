@@ -24,12 +24,12 @@ const addFolder = async (req, res) => {
 
 const editFolder = async (req, res) => {
     try {
-        const { id, name, desc } = req.body;
+        const { folderId, name, desc } = req.body;
         const userId = req.user && req.user._id;
-        if (!id) return res.json({ status: 'error', message: 'Không xác định được thư mục' });
+        if (!folderId) return res.json({ status: 'error', message: 'Không xác định được thư mục' });
 
         if (name) {
-            const existed = await Folder.findOne({ name: name, userId: userId, _id: { $ne: id } });
+            const existed = await Folder.findOne({ name: name, userId: userId, _id: { $ne: folderId } });
             if (existed) {
                 return res.json({ status: 'error', message: 'Tên thư mục đã tồn tại' });
             }
@@ -38,7 +38,7 @@ const editFolder = async (req, res) => {
         const updateData = {};
         if (name) updateData.name = name;
         if (desc) updateData.desc = desc;
-        const folder = await Folder.findOneAndUpdate({ _id: id, userId: userId }, updateData, { new: true });
+        const folder = await Folder.findOneAndUpdate({ _id: folderId, userId: userId }, updateData, { new: true });
         if (!folder) return res.json({ status: 'error', message: 'Không tìm thấy thư mục' });
         res.json({ status: 'success', data: folder, message: 'Cập nhật thư mục thành công' });
     } catch (error) {
@@ -48,22 +48,22 @@ const editFolder = async (req, res) => {
 
 const deleteFolder = async (req, res) => {
     try {
-        const { id } = req.body;
+        const { folderId } = req.body;
         const userId = req.user && req.user._id || req.user.id;
         const user = await User.findById(userId);
-        if (!id) return res.json({ status: 'error', message: 'Không xác định được thư mục' });
+        if (!folderId) return res.json({ status: 'error', message: 'Không xác định được thư mục' });
 
         let folder;
         if (user && user.role === 'admin') {
-            folder = await Folder.findById(id);
+            folder = await Folder.findById(folderId);
         } else {
-            folder = await Folder.findOne({ _id: id, userId: userId });
+            folder = await Folder.findOne({ _id: folderId, userId: userId });
         }
 
         if (!folder) return res.json({ status: 'error', message: 'Không tìm thấy thư mục hoặc không có quyền xóa' });
 
-        await Picture.deleteMany({ folderId: id });
-        await Folder.findByIdAndDelete(id);
+        await Picture.deleteMany({ folderId: folderId });
+        await Folder.findByIdAndDelete(folderId);
 
         res.json({ status: 'success', message: 'Xóa thành công' });
     } catch (error) {
