@@ -5,7 +5,7 @@ const auth = require('../middleware/auth');
 const router = express.Router();
 
 
-router.get('/user', auth, userController.getUser);
+router.get('/get', auth, userController.getUser);
 router.post('/add', userController.addUser);
 router.post('/login', userController.login);
 router.post('/logout', auth, userController.logout);
