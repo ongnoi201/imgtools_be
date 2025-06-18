@@ -118,9 +118,25 @@ const deleteImage = async (req, res) => {
     }
 };
 
+const getAllImageByUser = async (req, res) => {
+    try {
+        const userId = req.user && (req.user._id || req.user.id);
+        const userObjectId = mongoose.Types.ObjectId(userId);
+
+        const images = await Picture.find({
+            userId: userObjectId,
+        }).sort({ createdAt: -1 });
+
+        res.json({ status: 'success', data: images });
+    } catch (err) {
+        res.json({ status: 400, message: 'Lấy ảnh thất bại!', err });
+    }
+};
+
 module.exports = {
     uploadImage,
     getAllImageByUserAndFolder,
     getAllImageDetails,
     deleteImage,
+    getAllImageByUser,
 };
