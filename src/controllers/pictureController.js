@@ -10,7 +10,7 @@ const uploadImage = async (req, res) => {
         const folderId = req.body.folderId;
 
         if (!files || files.length === 0) {
-            return res.json({ status: 400, message: 'Không có ảnh nào được upload!' });
+            return res.json({ status: 'error', message: 'Không có ảnh nào được upload!' });
         }
 
         const pictures = await Picture.insertMany(
