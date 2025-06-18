@@ -25,7 +25,7 @@ const addFolder = async (req, res) => {
 const editFolder = async (req, res) => {
     try {
         const { folderId, name, desc } = req.body;
-        const userId = req.user && req.user._id;
+        const userId = req.user && (req.user._id || req.user.id);
         if (!folderId) return res.json({ status: 'error', message: 'Không xác định được thư mục' });
 
         if (name) {
