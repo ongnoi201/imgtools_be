@@ -71,8 +71,13 @@ class UserController {
                 }
                 updateData.username = newUsername;
             }
+
             if (Object.prototype.hasOwnProperty.call(req.body, 'avatar')) {
                 updateData.avatar = req.body.avatar;
+            }
+
+            if (Object.prototype.hasOwnProperty.call(req.body, 'avatar_frame')) {
+                updateData.avatar_frame = req.body.avatar_frame;
             }
 
             if (
