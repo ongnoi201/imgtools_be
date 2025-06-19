@@ -6,7 +6,7 @@ class UserController {
     async getUser(req, res) {
         try {
             const userId = req.user.id;
-            const user = await User.findById(userId);
+            const user = await User.findById(userId).select('-role -password');
             if (!user) {
                 return res.json({ status: 'error', message: 'Không tìm thấy người dùng' });
             }
