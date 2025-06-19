@@ -183,7 +183,7 @@ const updateFavoriteStatus = async (req, res) => {
             return res.json({ status: 'error', message: 'Không tìm thấy hoặc không có quyền cập nhật!' });
         }
 
-        res.json({ status: 'success', message: 'Cập nhật trạng thái thành công!', data: updated });
+        res.json({ status: 'success', message: 'Cập nhật trạng thái thành công!'});
     } catch (err) {
         res.json({ status: 400, message: 'Cập nhật trạng thái thất bại!', err });
     }
