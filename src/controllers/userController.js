@@ -110,7 +110,7 @@ class UserController {
 
             const user = await User.findByIdAndUpdate(targetUserId, updateData, { new: true });
             if (!user) return res.json({ status: 'error', message: 'Không tìm thấy người dùng' });
-            res.json({ status: 'success', data: user, message: 'Cập nhật thành công' });
+            res.json({ status: 'success', message: 'Cập nhật thành công' });
         } catch (error) {
             res.json({ status: 400, message: error.message });
         }
