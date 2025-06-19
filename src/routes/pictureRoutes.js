@@ -9,5 +9,7 @@ router.get('/get/:folderId', auth, pictureController.getAllImageByUserAndFolder)
 router.get('/all', auth, pictureController.getAllImageDetails);
 router.get('/get', auth, pictureController.getAllImageByUser);
 router.delete('/delete', auth, pictureController.deleteImage);
+router.patch('/favorite', auth, pictureController.updateFavoriteStatus);
+router.get('/favorite', auth, pictureController.getFavoriteImagesByUser);
 
 module.exports = router;
