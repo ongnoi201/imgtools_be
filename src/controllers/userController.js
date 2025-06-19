@@ -177,6 +177,7 @@ class UserController {
                     id: user._id,
                     username: user.username,
                     avatar: user.avatar,
+                    avatar_frame: user.avatar_frame,
                     name: user.name,
                 }
             });
