@@ -222,6 +222,43 @@ const getFavoriteImagesByUser = async (req, res) => {
     }
 };
 
+const getImageUserFolder = async (req, res) => {
+    try {
+        const { userId, folderId } = req.body;
+        if (!userId || !folderId) {
+            return res.json({ status: 'error', message: 'Không tìm thấy dữ liệu đầu vào' });
+        }
+        const userObjectId = mongoose.Types.ObjectId(userId);
+        const folderObjectId = mongoose.Types.ObjectId(folderId);
+
+        const page = parseInt(req.query.page, 10) || 1;
+        const pageSize = parseInt(req.query.pageSize, 10) || 30;
+        const skip = (page - 1) * pageSize;
+
+        const filter = {
+            userId: userObjectId,
+            folderId: folderObjectId,
+        };
+
+        const total = await Picture.countDocuments(filter);
+        const images = await Picture.find(filter)
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(pageSize);
+
+        res.json({
+            status: 'success',
+            data: images,
+            total,
+            totalPages: Math.ceil(total / pageSize),
+            page,
+            pageSize
+        });
+    } catch (err) {
+        res.json({ status: 400, message: 'Lấy ảnh thất bại!', err });
+    }
+};
+
 module.exports = {
     uploadImage,
     getAllImageByUserAndFolder,
@@ -230,4 +267,5 @@ module.exports = {
     getAllImageByUser,
     updateFavoriteStatus,
     getFavoriteImagesByUser,
+    getImageUserFolder,
 };

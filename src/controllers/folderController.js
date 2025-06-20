@@ -111,10 +111,24 @@ const getAllFolderByUserId = async (req, res) => {
     }
 };
 
+const getAllFolderUserId = async (req, res) => {
+    try {
+        const { userId } = req.body;
+        if (!userId) {
+            return res.json({ status: 'error', message: 'Không tìm thấy người dùng' });
+        }
+        const folders = await Folder.find({ userId: userId });
+        res.json({ status: 'success', data: folders });
+    } catch (error) {
+        res.json({ status: 400, message: error.message });
+    }
+};
+
 module.exports = {
     addFolder,
     editFolder,
     deleteFolder,
     getAllFolder,
     getAllFolderByUserId,
+    getAllFolderUserId,
 };

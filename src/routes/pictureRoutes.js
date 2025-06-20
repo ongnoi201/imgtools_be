@@ -11,5 +11,6 @@ router.get('/get', auth, pictureController.getAllImageByUser);
 router.delete('/delete', auth, pictureController.deleteImage);
 router.patch('/favorite', auth, pictureController.updateFavoriteStatus);
 router.get('/favorite', auth, pictureController.getFavoriteImagesByUser);
+router.post('/image-user-folder', auth, pictureController.getImageUserFolder);
 
 module.exports = router;

@@ -8,5 +8,6 @@ router.put('/edit', auth, folderController.editFolder);
 router.delete('/delete', auth, folderController.deleteFolder);
 router.get('/all', auth, folderController.getAllFolderByUserId);
 router.get('/all-admin', auth, folderController.getAllFolder);
+router.post('/folder-user', auth, folderController.getAllFolderUserId);
 
 module.exports = router;
