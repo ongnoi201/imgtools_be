@@ -221,7 +221,7 @@ class UserController {
             if (!user || user.role !== 'admin') {
                 return res.json({ status: 'error', message: 'Bạn không có quyền truy cập' });
             }
-            const users = await User.find();
+            const users = await User.find().select('-password');
             res.json({ status: 'success', data: users });
         } catch (error) {
             res.json({ status: 400, message: error.message });
