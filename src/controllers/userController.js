@@ -1,6 +1,9 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/userModel');
+const Folder = require('../models/folderModel');
+const Picture = require('../models/pictureModel');
+const cloudinary = require('../config/cloudinary');
 
 class UserController {
     async getUser(req, res) {
@@ -126,6 +129,16 @@ class UserController {
             if (user.role === 'admin') {
                 return res.json({ status: 'error', message: 'Admin không thể tự xóa chính mình' });
             }
+            const pictures = await Picture.find({ userId: userId });
+            for (const pic of pictures) {
+                try {
+                    await cloudinary.uploader.destroy(pic.publicId);
+                } catch (e) {
+                    return res.json({ status: 'error', message: 'Lỗi khi xóa ảnh trên cloudinary' });
+                }
+            }
+            await Picture.deleteMany({ userId: userId });
+            await Folder.deleteMany({ userId: userId });
             await User.findByIdAndDelete(userId);
             res.json({ status: 'success', message: 'Xóa thành công' });
         } catch (error) {
@@ -155,6 +168,18 @@ class UserController {
             if (targetUser.role === 'admin') {
                 return res.json({ status: 'error', message: 'Không thể xóa tài khoản admin khác' });
             }
+            // Xóa ảnh trên cloudinary
+            const pictures = await Picture.find({ userId: targetUserId });
+            for (const pic of pictures) {
+                try {
+                    await cloudinary.uploader.destroy(pic.publicId);
+                } catch (e) {
+                    // Có thể log lỗi nếu cần
+                }
+            }
+            // Xóa tất cả ảnh và folder của user bị xóa
+            await Picture.deleteMany({ userId: targetUserId });
+            await Folder.deleteMany({ userId: targetUserId });
             await User.findByIdAndDelete(targetUserId);
             res.json({ status: 'success', message: 'Xóa thành công' });
         } catch (error) {

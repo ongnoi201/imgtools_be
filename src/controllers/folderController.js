@@ -1,6 +1,7 @@
 const Folder = require('../models/folderModel');
 const Picture = require('../models/pictureModel');
 const User = require('../models/userModel');
+const cloudinary = require('../config/cloudinary');
 
 
 const addFolder = async (req, res) => {
@@ -14,7 +15,7 @@ const addFolder = async (req, res) => {
             return res.json({ status: 'error', message: 'Tên thư mục đã tồn tại' });
         }
 
-        const folder = new Folder({ name, desc, userId});
+        const folder = new Folder({ name, desc, userId });
         await folder.save();
         res.json({ status: 'success', data: folder, message: 'Tạo thư mục thành công' });
     } catch (error) {
@@ -62,9 +63,18 @@ const deleteFolder = async (req, res) => {
 
         if (!folder) return res.json({ status: 'error', message: 'Không tìm thấy thư mục hoặc không có quyền xóa' });
 
+        const pictures = await Picture.find({ folderId: folderId });
+        for (const pic of pictures) {
+            if (pic.publicId) {
+                try {
+                    await cloudinary.uploader.destroy(pic.publicId);
+                } catch (err) {
+                    return res.json({ status: 'error', message: 'Lỗi khi xóa ảnh trên Cloudinary' });
+                }
+            }
+        }
         await Picture.deleteMany({ folderId: folderId });
         await Folder.findByIdAndDelete(folderId);
-
         res.json({ status: 'success', message: 'Xóa thành công' });
     } catch (error) {
         res.json({ status: 400, message: error.message });
