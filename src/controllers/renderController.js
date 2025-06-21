@@ -3,9 +3,10 @@ const RENDER_BASE_URL = 'https://api.render.com/v1';
 
 exports.updateEnvVars = async (req, res) => {
     try {
-        const { serviceId, updates } = req.body;
+        const { updates } = req.body;
+        const SERVICE_ID = 'prj-d17do7h5pdvs7388slrg';
 
-        const response = await fetch(`${RENDER_BASE_URL}/services/${serviceId}/env-vars`, {
+        const response = await fetch(`${RENDER_BASE_URL}/services/${SERVICE_ID}/env-vars`, {
             method: 'PATCH',
             headers: {
                 'Authorization': `Bearer ${RENDER_API_KEY}`,
@@ -34,9 +35,8 @@ exports.updateEnvVars = async (req, res) => {
 
 // ✅ GET tất cả env
 exports.getAllEnv = async (req, res) => {
+    const SERVICE_ID = 'prj-d17do7h5pdvs7388slrg';
     try {
-        const SERVICE_ID = 'prj-d17do7h5pdvs7388slrg';
-
         const response = await fetch(`${RENDER_BASE_URL}/${SERVICE_ID}/env-vars`, {
             method: 'GET',
             headers: {
