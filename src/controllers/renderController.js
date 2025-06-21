@@ -37,7 +37,7 @@ exports.updateEnvVars = async (req, res) => {
 exports.getAllEnv = async (req, res) => {
     const SERVICE_ID = 'prj-d17do7h5pdvs7388slrg';
     try {
-        const response = await fetch(`${RENDER_BASE_URL}/${SERVICE_ID}/env-vars`, {
+        const response = await fetch(`${RENDER_BASE_URL}/services/${SERVICE_ID}/env-vars`, {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${RENDER_API_KEY}`,
@@ -73,7 +73,7 @@ exports.deleteEnv = async (req, res) => {
         const { key } = req.body;
         const SERVICE_ID = 'prj-d17do7h5pdvs7388slrg';
 
-        const response = await fetch(`${RENDER_BASE_URL}/${SERVICE_ID}/env-vars/${key}`, {
+        const response = await fetch(`${RENDER_BASE_URL}/services/${SERVICE_ID}/env-vars/${key}`, {
             method: 'DELETE',
             headers: {
                 Authorization: `Bearer ${RENDER_API_KEY}`,
