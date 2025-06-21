@@ -21,6 +21,7 @@ exports.updateEnvVars = async (req, res) => {
 
         const data = await response.json();
         res.json({
+            status: 'success',
             message: 'Cập nhật thành công',
             data: data,
         });
