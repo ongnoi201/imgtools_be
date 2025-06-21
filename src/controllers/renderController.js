@@ -4,7 +4,7 @@ const RENDER_BASE_URL = 'https://api.render.com/v1';
 exports.updateEnvVars = async (req, res) => {
     try {
         const { updates } = req.body;
-        const SERVICE_ID = 'prj-d17do7h5pdvs7388slrg';
+        const SERVICE_ID = 'prj-srv-d17dod0dl3ps73ablia0';
 
         const response = await fetch(`${RENDER_BASE_URL}/services/${SERVICE_ID}/env-vars`, {
             method: 'PATCH',
@@ -35,7 +35,7 @@ exports.updateEnvVars = async (req, res) => {
 
 // ✅ GET tất cả env
 exports.getAllEnv = async (req, res) => {
-    const SERVICE_ID = 'prj-d17do7h5pdvs7388slrg';
+    const SERVICE_ID = 'srv-d17dod0dl3ps73ablia0';
     try {
         const response = await fetch(`${RENDER_BASE_URL}/services/${SERVICE_ID}/env-vars`, {
             method: 'GET',
@@ -71,7 +71,7 @@ exports.getAllEnv = async (req, res) => {
 exports.deleteEnv = async (req, res) => {
     try {
         const { key } = req.body;
-        const SERVICE_ID = 'prj-d17do7h5pdvs7388slrg';
+        const SERVICE_ID = 'srv-d17dod0dl3ps73ablia0';
 
         const response = await fetch(`${RENDER_BASE_URL}/services/${SERVICE_ID}/env-vars/${key}`, {
             method: 'DELETE',
