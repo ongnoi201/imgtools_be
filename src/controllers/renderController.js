@@ -51,7 +51,7 @@ exports.getAllEnv = async (req, res) => {
         const data = await response.json();
 
         if (response.ok) {
-            const filteredData = data.filter(env => !excludeKeys.has(envVars.key));
+            const filteredData = data.filter(env => !excludeKeys.has(envVar.key));
 
             return res.status(200).json({
                 status: 'success',
