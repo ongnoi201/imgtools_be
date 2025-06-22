@@ -22,7 +22,7 @@ exports.updateEnvVars = async (req, res) => {
                 Authorization: `Bearer ${RENDER_API_KEY}`,
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ value }),
+            body: JSON.stringify({ key, value }),
         });
 
         if (!patchRes.ok) {
