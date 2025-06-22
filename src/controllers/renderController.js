@@ -19,8 +19,10 @@ exports.updateEnvVars = async (req, res) => {
             ],
         };
 
-        const response = await fetch(
-            `${RENDER_BASE_URL}/services/${SERVICE_ID}/env-vars`,
+        console.log('payload: ', payload);
+        
+
+        const response = await fetch(`${RENDER_BASE_URL}/services/${SERVICE_ID}/env-vars`,
             {
                 method: 'PATCH',
                 headers: {
