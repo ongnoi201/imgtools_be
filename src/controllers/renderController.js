@@ -9,7 +9,7 @@ exports.updateEnvVars = async (req, res) => {
         console.log('key:', key);
         console.log('URL:', `${RENDER_BASE_URL}/services/${SERVICE_ID}/env-vars`);
 
-        if (!cursor || !value) {
+        if (!key || !value) {
             return res.status(400).json({
                 status: 'error',
                 message: 'Both cursor and value are required.',
