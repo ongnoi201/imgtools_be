@@ -18,7 +18,7 @@ connectDB();
 app.use('/api/users', userRoutes);
 app.use('/api/pictures', pictureRoutes);
 app.use('/api/folders', folderRoutes);
-app.use('/api/render', renderRoutes);
+// app.use('/api/render', renderRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port: ${PORT}`);

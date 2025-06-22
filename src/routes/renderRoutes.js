@@ -1,9 +1,9 @@
-const express = require('express');
-const router = express.Router();
-const renderController = require('../controllers/renderController');
+// const express = require('express');
+// const router = express.Router();
+// const renderController = require('../controllers/renderController');
 
-router.put('/env-vars', renderController.updateEnvVars);
-router.get('/get', renderController.getAllEnv);
-router.delete('/delete', renderController.deleteEnv);
+// router.put('/env-vars', renderController.updateEnvVars);
+// router.get('/get', renderController.getAllEnv);
+// router.delete('/delete', renderController.deleteEnv);
 
-module.exports = router;
+// module.exports = router;
