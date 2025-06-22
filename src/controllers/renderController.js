@@ -4,7 +4,7 @@ const RENDER_BASE_URL = 'https://api.render.com/v1';
 exports.updateEnvVars = async (req, res) => {
     try {
         const { key, value, cursor } = req.body;
-        const SERVICE_ID = 'd17dod0dl3ps73ablia0';
+        const SERVICE_ID = 'prj-srv-d17dod0dl3ps73ablia0'; 
 
         if (!key || !value) {
             return res.status(400).json({ error: 'Missing key or value' });
@@ -13,44 +13,53 @@ exports.updateEnvVars = async (req, res) => {
         const payload = {
             envVars: [
                 {
-                    envVar: { key, value },
-                    ...(cursor ? { cursor } : {}),
-                },
-            ],
+                    key,
+                    value,
+                    ...(cursor ? { cursor } : {})
+                }
+            ]
         };
 
-        console.log('payload: ', payload);
-        
+        console.log('Render payload:', payload);
 
-        const response = await fetch(`${RENDER_BASE_URL}/services/${SERVICE_ID}/env-vars`,
+        const response = await fetch(
+            `${RENDER_BASE_URL}/services/${SERVICE_ID}/env-vars`,
             {
                 method: 'PATCH',
                 headers: {
                     Authorization: `Bearer ${RENDER_API_KEY}`,
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(payload),
+                body: JSON.stringify(payload)
             }
         );
 
         if (!response.ok) {
-            res.json({
-                status: 'error',
-                message: 'Cập nhật không thành công',
-                data,
-            });
+            let errorData;
+            try {
+                errorData = await response.json();
+            } catch {
+                errorData = await response.text();
+            }
+            console.error('Render API error:', errorData);
+            throw new Error(
+                typeof errorData === 'string' ? errorData : JSON.stringify(errorData)
+            );
         }
 
         res.json({
             status: 'success',
-            message: 'Cập nhật thành công',
-            data,
+            message: 'Cập nhật ENV thành công!'
         });
+
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Failed to update Render env vars' });
+        console.error('BE error:', error);
+        res.status(500).json({
+            error: error.message || 'Failed to update Render env vars'
+        });
     }
 };
+
 
 
 
