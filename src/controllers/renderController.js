@@ -4,38 +4,41 @@ const RENDER_BASE_URL = 'https://api.render.com/v1';
 exports.updateEnvVars = async (req, res) => {
     const SERVICE_ID = 'srv-d17dod0dl3ps73ablia0';
     try {
-        const { key, value } = req.body;
-        console.log('SERVICE_ID:', SERVICE_ID);
-        console.log('key:', key);
-        console.log('URL:', `${RENDER_BASE_URL}/services/${SERVICE_ID}/env-vars`);
+        const { envVarKeyValue } = req.body;
 
-        if (!key || !value) {
+        if (!envVarKeyValue) {
             return res.status(400).json({
                 status: 'error',
-                message: 'Both cursor and value are required.',
+                message: '`envVarKeyValue` is required'
             });
         }
 
-        const patchRes = await fetch(`${RENDER_BASE_URL}/services/${SERVICE_ID}/env-vars`, {
+        const response = await fetch(`${RENDER_BASE_URL}/services/${SERVICE_ID}/env-vars`, {
             method: 'PUT',
             headers: {
                 Authorization: `Bearer ${RENDER_API_KEY}`,
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ key, value }),
+            body: JSON.stringify({ envVarKeyValue })
         });
 
-        if (!patchRes.ok) {
-            const errText = await patchRes.text();
-            throw new Error(`Render PUT failed: ${patchRes.status} ${errText}`);
+        const data = await response.json();
+
+        if (response.ok) {
+            return res.json({ status: 'success', data });
+        } else {
+            return res.status(response.status).json({
+                status: 'error',
+                message: data.message || 'Update failed',
+            });
         }
 
-        const patchJson = await patchRes.json();
-        return res.json({ status: 'success', data: patchJson });
-
     } catch (err) {
-        console.error('Error updating env var:', err.message);
-        return res.status(500).json({ status: 'error', message: err.message });
+        console.error('updateEnvVars error:', err);
+        return res.status(500).json({
+            status: 'error',
+            message: err.message,
+        });
     }
 };
 
