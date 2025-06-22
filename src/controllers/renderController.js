@@ -3,16 +3,32 @@ const RENDER_BASE_URL = 'https://api.render.com/v1';
 
 exports.updateEnvVars = async (req, res) => {
     try {
-        const { updates } = req.body;
+        // Lấy key & value trực tiếp từ body
+        const { key, value } = req.body;
         const SERVICE_ID = 'prj-srv-d17dod0dl3ps73ablia0';
 
+        // Validate đơn giản
+        if (!key || !value) {
+            return res.status(400).json({ error: 'Missing key or value' });
+        }
+
+        // Gửi Render: envVars là 1 mảng các envVar
         const response = await fetch(`${RENDER_BASE_URL}/services/${SERVICE_ID}/env-vars`, {
             method: 'PATCH',
             headers: {
                 'Authorization': `Bearer ${RENDER_API_KEY}`,
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ envVars: updates }),
+            body: JSON.stringify({
+                envVars: [
+                    {
+                        envVar: {
+                            key: key,
+                            value: value,
+                        },
+                    },
+                ],
+            }),
         });
 
         if (!response.ok) {
@@ -26,12 +42,12 @@ exports.updateEnvVars = async (req, res) => {
             message: 'Cập nhật thành công',
             data: data,
         });
-
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Failed to update Render env vars' });
     }
 };
+
 
 // ✅ GET tất cả env (bỏ các key không mong muốn bằng Set)
 exports.getAllEnv = async (req, res) => {
