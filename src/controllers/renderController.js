@@ -1,35 +1,39 @@
 const RENDER_API_KEY = process.env.RENDER_API_KEY;
 const RENDER_BASE_URL = 'https://api.render.com/v1';
 
+// BE controller
 exports.updateEnvVars = async (req, res) => {
     try {
-        // Lấy key & value trực tiếp từ body
-        const { key, value } = req.body;
+        const { key, value, cursor } = req.body; // thêm cursor
         const SERVICE_ID = 'prj-srv-d17dod0dl3ps73ablia0';
 
-        // Validate đơn giản
         if (!key || !value) {
             return res.status(400).json({ error: 'Missing key or value' });
         }
 
-        // Gửi Render: envVars là 1 mảng các envVar
-        const response = await fetch(`${RENDER_BASE_URL}/services/${SERVICE_ID}/env-vars`, {
-            method: 'PATCH',
-            headers: {
-                'Authorization': `Bearer ${RENDER_API_KEY}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                envVars: [
-                    {
-                        envVar: {
-                            key: key,
-                            value: value,
-                        },
+        const payload = {
+            envVars: [
+                {
+                    envVar: {
+                        key,
+                        value,
                     },
-                ],
-            }),
-        });
+                    ...(cursor ? { cursor } : {}), // chỉ thêm cursor nếu có
+                },
+            ],
+        };
+
+        const response = await fetch(
+            `${RENDER_BASE_URL}/services/${SERVICE_ID}/env-vars`,
+            {
+                method: 'PATCH',
+                headers: {
+                    Authorization: `Bearer ${RENDER_API_KEY}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            }
+        );
 
         if (!response.ok) {
             const errorData = await response.json();
@@ -40,7 +44,7 @@ exports.updateEnvVars = async (req, res) => {
         res.json({
             status: 'success',
             message: 'Cập nhật thành công',
-            data: data,
+            data,
         });
     } catch (error) {
         console.error(error);
