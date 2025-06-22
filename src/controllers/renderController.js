@@ -1,11 +1,10 @@
 const RENDER_API_KEY = process.env.RENDER_API_KEY;
 const RENDER_BASE_URL = 'https://api.render.com/v1';
 
-// BE controller
 exports.updateEnvVars = async (req, res) => {
     try {
-        const { key, value, cursor } = req.body; // thêm cursor
-        const SERVICE_ID = 'prj-srv-d17dod0dl3ps73ablia0';
+        const { key, value, cursor } = req.body;
+        const SERVICE_ID = 'prj-srv-xxxxxx';
 
         if (!key || !value) {
             return res.status(400).json({ error: 'Missing key or value' });
@@ -14,11 +13,8 @@ exports.updateEnvVars = async (req, res) => {
         const payload = {
             envVars: [
                 {
-                    envVar: {
-                        key,
-                        value,
-                    },
-                    ...(cursor ? { cursor } : {}), // chỉ thêm cursor nếu có
+                    envVar: { key, value },
+                    ...(cursor ? { cursor } : {}),
                 },
             ],
         };
@@ -36,11 +32,24 @@ exports.updateEnvVars = async (req, res) => {
         );
 
         if (!response.ok) {
-            const errorData = await response.json();
+            let errorData;
+            try {
+                const text = await response.text();
+                errorData = text ? JSON.parse(text) : {};
+            } catch {
+                errorData = {};
+            }
             throw new Error(JSON.stringify(errorData));
         }
 
-        const data = await response.json();
+        let data;
+        try {
+            const text = await response.text();
+            data = text ? JSON.parse(text) : {};
+        } catch {
+            data = {};
+        }
+
         res.json({
             status: 'success',
             message: 'Cập nhật thành công',
@@ -51,6 +60,7 @@ exports.updateEnvVars = async (req, res) => {
         res.status(500).json({ error: 'Failed to update Render env vars' });
     }
 };
+
 
 
 // ✅ GET tất cả env (bỏ các key không mong muốn bằng Set)
