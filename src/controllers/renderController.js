@@ -5,6 +5,9 @@ exports.updateEnvVars = async (req, res) => {
     const SERVICE_ID = 'srv-d17dod0dl3ps73ablia0';
     try {
         const { cursor, value } = req.body;
+        console.log('SERVICE_ID:', SERVICE_ID);
+        console.log('CURSOR:', cursor);
+        console.log('URL:', `${RENDER_BASE_URL}/services/${SERVICE_ID}/env-vars/${cursor}`);
 
         if (!cursor || !value) {
             return res.status(400).json({
