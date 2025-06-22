@@ -32,22 +32,11 @@ exports.updateEnvVars = async (req, res) => {
         );
 
         if (!response.ok) {
-            let errorData;
-            try {
-                const text = await response.text();
-                errorData = text ? JSON.parse(text) : {};
-            } catch {
-                errorData = {};
-            }
-            throw new Error(JSON.stringify(errorData));
-        }
-
-        let data;
-        try {
-            const text = await response.text();
-            data = text ? JSON.parse(text) : {};
-        } catch {
-            data = {};
+            res.json({
+                status: 'error',
+                message: 'Cập nhật không thành công',
+                data,
+            });
         }
 
         res.json({
