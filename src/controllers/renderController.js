@@ -10,6 +10,9 @@ exports.updateEnvVars = async (req, res) => {
             return res.status(400).json({ message: 'Key and value are required' });
         }
 
+        console.log('SERVICE_ID:', SERVICE_ID);
+        console.log('URL:', `${RENDER_BASE_URL}/services/${SERVICE_ID}/env-vars`);
+
         const response = await fetch(`${RENDER_BASE_URL}/services/${SERVICE_ID}/env-vars`, {
             method: 'POST',
             headers: {
