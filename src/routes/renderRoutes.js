@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const renderController = require('../controllers/renderController');
 
-router.patch('/env-vars', renderController.updateEnvVars);
+router.put('/env-vars', renderController.updateEnvVars);
 router.get('/get', renderController.getAllEnv);
 router.delete('/delete', renderController.deleteEnv);
 

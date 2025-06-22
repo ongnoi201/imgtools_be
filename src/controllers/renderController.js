@@ -4,10 +4,10 @@ const RENDER_BASE_URL = 'https://api.render.com/v1';
 exports.updateEnvVars = async (req, res) => {
     const SERVICE_ID = 'srv-d17dod0dl3ps73ablia0';
     try {
-        const { cursor, value } = req.body;
+        const { key, value } = req.body;
         console.log('SERVICE_ID:', SERVICE_ID);
-        console.log('CURSOR:', cursor);
-        console.log('URL:', `${RENDER_BASE_URL}/services/${SERVICE_ID}/env-vars/${cursor}`);
+        console.log('key:', key);
+        console.log('URL:', `${RENDER_BASE_URL}/services/${SERVICE_ID}/env-vars`);
 
         if (!cursor || !value) {
             return res.status(400).json({
@@ -16,8 +16,8 @@ exports.updateEnvVars = async (req, res) => {
             });
         }
 
-        const patchRes = await fetch(`${RENDER_BASE_URL}/services/${SERVICE_ID}/env-vars/${cursor}`, {
-            method: 'PATCH',
+        const patchRes = await fetch(`${RENDER_BASE_URL}/services/${SERVICE_ID}/env-vars`, {
+            method: 'PUT',
             headers: {
                 Authorization: `Bearer ${RENDER_API_KEY}`,
                 'Content-Type': 'application/json',
@@ -27,7 +27,7 @@ exports.updateEnvVars = async (req, res) => {
 
         if (!patchRes.ok) {
             const errText = await patchRes.text();
-            throw new Error(`Render PATCH failed: ${patchRes.status} ${errText}`);
+            throw new Error(`Render PUT failed: ${patchRes.status} ${errText}`);
         }
 
         const patchJson = await patchRes.json();
