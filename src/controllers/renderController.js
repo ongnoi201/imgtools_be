@@ -2,44 +2,37 @@ const RENDER_API_KEY = process.env.RENDER_API_KEY;
 const RENDER_BASE_URL = 'https://api.render.com/v1';
 
 exports.updateEnvVars = async (req, res) => {
+    const SERVICE_ID = 'srv-d17dod0dl3ps73ablia0';
     try {
-        const { key, value } = req.body;
-        const SERVICE_ID = 'srv-d17dod0dl3ps73ablia0';
+        const { cursor, value } = req.body;
 
-        if (!key || !value) {
-            return res.status(400).json({ message: 'Key and value are required' });
+        if (!cursor || !value) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'Both cursor and value are required.',
+            });
         }
 
-        console.log('SERVICE_ID:', SERVICE_ID);
-        console.log('URL:', `${RENDER_BASE_URL}/services/${SERVICE_ID}/env-vars`);
-
-        const response = await fetch(`${RENDER_BASE_URL}/services/${SERVICE_ID}/env-vars`, {
-            method: 'POST',
+        const patchRes = await fetch(`${RENDER_BASE_URL}/services/${SERVICE_ID}/env-vars/${cursor}`, {
+            method: 'PATCH',
             headers: {
                 Authorization: `Bearer ${RENDER_API_KEY}`,
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ key, value })
+            body: JSON.stringify({ value }),
         });
 
-        if (!response.ok) {
-            const errorBody = await response.text();
-            throw new Error(`Render API error: ${response.status} ${errorBody}`);
+        if (!patchRes.ok) {
+            const errText = await patchRes.text();
+            throw new Error(`Render PATCH failed: ${patchRes.status} ${errText}`);
         }
 
-        const data = await response.json();
+        const patchJson = await patchRes.json();
+        return res.json({ status: 'success', data: patchJson });
 
-        res.status(200).json({
-            status: 'success',
-            data: data
-        });
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            status: 'error',
-            message: error.message
-        });
+    } catch (err) {
+        console.error('Error updating env var:', err.message);
+        return res.status(500).json({ status: 'error', message: err.message });
     }
 };
 
