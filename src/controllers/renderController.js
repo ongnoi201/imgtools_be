@@ -4,7 +4,7 @@ const RENDER_BASE_URL = 'https://api.render.com/v1';
 exports.updateEnvVars = async (req, res) => {
     try {
         const { key, value, cursor } = req.body;
-        const SERVICE_ID = 'prj-srv-xxxxxx';
+        const SERVICE_ID = 'd17dod0dl3ps73ablia0';
 
         if (!key || !value) {
             return res.status(400).json({ error: 'Missing key or value' });
