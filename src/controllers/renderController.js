@@ -33,9 +33,12 @@ exports.updateEnvVars = async (req, res) => {
     }
 };
 
-// ✅ GET tất cả env
+// ✅ GET tất cả env (bỏ các key không mong muốn bằng Set)
 exports.getAllEnv = async (req, res) => {
     const SERVICE_ID = 'srv-d17dod0dl3ps73ablia0';
+
+    const excludeKeys = new Set(['RENDER_API_KEY', 'MONGODB_URI']);
+
     try {
         const response = await fetch(`${RENDER_BASE_URL}/services/${SERVICE_ID}/env-vars`, {
             method: 'GET',
@@ -48,9 +51,11 @@ exports.getAllEnv = async (req, res) => {
         const data = await response.json();
 
         if (response.ok) {
+            const filteredData = data.filter(env => !excludeKeys.has(env.key));
+
             return res.status(200).json({
                 status: 'success',
-                data: data,
+                data: filteredData,
             });
         } else {
             return res.status(response.status).json({
@@ -66,6 +71,7 @@ exports.getAllEnv = async (req, res) => {
         });
     }
 };
+
 
 // ✅ DELETE 1 env theo key
 exports.deleteEnv = async (req, res) => {
