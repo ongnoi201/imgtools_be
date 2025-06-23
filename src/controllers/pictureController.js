@@ -151,14 +151,22 @@ const getAllImageByUser = async (req, res) => {
         const pageSize = parseInt(req.query.pageSize, 10) || 30;
         const skip = (page - 1) * pageSize;
 
-        const images = await Picture.find({
-            userId: userObjectId,
-        })
+        const filter = { userId: userObjectId };
+
+        const total = await Picture.countDocuments(filter);
+        const images = await Picture.find(filter)
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(pageSize);
 
-        res.json({ status: 'success', data: images });
+        res.json({ 
+            status: 'success', 
+            data: images,
+            total,
+            totalPages: Math.ceil(total / pageSize),
+            page,
+            pageSize
+        });
     } catch (err) {
         res.json({ status: 400, message: 'Lấy ảnh thất bại!', err });
     }
